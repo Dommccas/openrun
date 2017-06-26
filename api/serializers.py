@@ -8,7 +8,7 @@ from .models import Distance_Unit
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ('url', 'username', 'email', 'groups')
+        fields = ('url', 'username', 'email', 'groups', 'is_staff')
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
