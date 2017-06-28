@@ -45,7 +45,7 @@ class Track(models.Model):
             2)
 
 
-class Point(models.Model):
+class TrackPoint(models.Model):
     POINT_TYPES = (
         ('S', 'Start'),
         ('F', 'Finish'),
@@ -57,7 +57,7 @@ class Point(models.Model):
     point_type = models.CharField(max_length=1, choices=POINT_TYPES)
     time = models.DateTimeField()
     elevation = models.DecimalField(max_digits=7, decimal_places=2)
-    gpx_track = models.ForeignKey(Track)
+    track = models.ForeignKey(Track)
     point = models.PointField()
     objects = models.GeoManager()
 
@@ -114,7 +114,7 @@ def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
 
 
-geoadmin.site.register(Point, geoadmin.OSMGeoAdmin)
+geoadmin.site.register(TrackPoint, geoadmin.OSMGeoAdmin)
 geoadmin.site.register(Track, geoadmin.OSMGeoAdmin)
 geoadmin.site.register(Distance_Unit, geoadmin.OSMGeoAdmin)
 geoadmin.site.register(Profile, geoadmin.OSMGeoAdmin)

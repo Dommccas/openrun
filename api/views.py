@@ -3,7 +3,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 
 from . import serializers
-from .models import Distance_Unit
+from .models import Distance_Unit, Track
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -28,3 +28,11 @@ class DistanceUnitViewSet(viewsets.ModelViewSet):
     """
     queryset = Distance_Unit.objects.all()
     serializer_class = serializers.DistanceUnitSerializer
+
+
+class TrackViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows tracks to be viewed or edited.
+    """
+    queryset = Track.objects.all()
+    serializer_class = serializers.TrackSerializer
