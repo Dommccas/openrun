@@ -1,8 +1,10 @@
 from django.contrib.auth.models import User, Group
 
 from rest_framework import viewsets
+from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 
 from . import serializers
+from .renderers import SVGRenderer
 from .models import Distance_Unit, Track
 
 
@@ -36,3 +38,4 @@ class TrackViewSet(viewsets.ModelViewSet):
     """
     queryset = Track.objects.all()
     serializer_class = serializers.TrackSerializer
+    renderer_classes = (JSONRenderer, BrowsableAPIRenderer, SVGRenderer, )

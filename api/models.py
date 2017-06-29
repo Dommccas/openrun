@@ -28,7 +28,7 @@ class Track(models.Model):
     objects = models.GeoManager()
 
     def __str__(self):
-        return self.start.strftime("%a %p %-d %B %Y")
+        return self.file_hash
 
     def distance_user_units(self):
         return round(
