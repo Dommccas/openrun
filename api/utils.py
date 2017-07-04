@@ -4,7 +4,7 @@ from fiona import open
 
 from django.contrib.gis.geos import Point, LineString, MultiLineString
 
-from .models import Track, TrackPoint
+from .models import Track
 
 from gpxpy import parse
 
@@ -12,7 +12,7 @@ from gpxpy import parse
 def SaveGPXtoModel(f, owner):
 
     # parse gpx file
-    gpx = parse(f)
+    gpx = parse(f.read().decode('utf-8'))
     f.seek(0)
 
     layer = open(f.temporary_file_path(), layer='tracks')

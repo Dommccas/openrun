@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from .models import Distance_Unit
 
@@ -99,3 +100,52 @@ class viewTestCase(TestCase):
             format='json', follow=True)
 
         self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
+
+
+class uploadTestCase(TestCase):
+    # Test suite for the file upload section.
+
+    def setUp(self):
+        valid_gpx = '<?xml version="1.0" encoding="UTF-8"?>\
+                <gpx version="1.1">\
+                <trk>\
+                <name><![CDATA[Running 4/15/10 6:04 pm]]></name>\
+                <time>2010-04-15T18:04:28Z</time>\
+                <trkseg>\
+                <trkpt lat="51.443217000" lon="-2.610013000">\
+                <ele>69.7</ele>\
+                <time>2010-04-15T18:04:28Z</time>\
+                </trkpt>\
+                <trkpt lat="51.443946000" lon="-2.610618000">\
+                <ele>72.9</ele>\
+                <time>2010-04-15T18:05:08Z</time>\
+                </trkpt>\
+                </trkseg>\
+                <trkseg>\
+                <trkpt lat="51.443638000" lon="-2.614061000">\
+                <ele>79.6</ele>\
+                <time>2010-04-15T18:07:20Z</time>\
+                </trkpt>\
+                <trkpt lat="51.443255000" lon="-2.615090000">\
+                <ele>81.0</ele>\
+                <time>2010-04-15T18:07:33Z</time>\
+                </trkpt>\
+                </trkseg>\
+                </trk>\
+                </gpx>'.encode('utf-8')
+
+        self.staff_user = User.objects.create(
+            username='staff',
+            is_staff=True,)
+        self.normal_user = User.objects.create(
+            username='user',
+            is_staff=False,)
+        self.client = APIClient()
+
+        self.file_dict = { 'gpx_file': SimpleUploadedFile(
+            'test.gpx', valid_gpx, 'text/xml')}
+
+    def test_api_can_upload_file(self):
+        self.client.force_authenticate(user=self.staff_user)
+        resp = self.client.put(reverse('upload', {'filename': 'test.gpx'}), self.file_dict, format='multipart')
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)

@@ -25,7 +25,7 @@ SECRET_KEY = 'xgu!ic9_31qbsq5miamshm=0zo4l07mwmur%qyhl(rk@b)=h_w'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [u'domoronic.pythonanywhere.com']
+ALLOWED_HOSTS = [u'domoronic.pythonanywhere.com', u'testserver']
 
 # Application definition
 
@@ -50,6 +50,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+FILE_UPLOAD_HANDLERS = [
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
 ]
 
 ROOT_URLCONF = 'openrun.urls'
