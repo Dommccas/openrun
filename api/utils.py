@@ -2,7 +2,7 @@ from hashlib import md5
 from pytz import utc
 from fiona import open
 
-from django.contrib.gis.geos import Point, LineString, MultiLineString
+from django.contrib.gis.geos import LineString, MultiLineString
 
 from .models import Track
 
@@ -43,38 +43,6 @@ def SaveGPXtoModel(f, owner):
             new_track.save()
 
             return new_track
-
-            # for segment_index, segment in enumerate(track.segments):
-            #     start_point_type = 'S' if segment_index == 0 else 'R'
-            #     if segment_index == (len(track.segments) - 1):
-            #         end_point_type = 'F'
-            #     else:
-            #         end_point_type = 'P'
-            #     start_point = segment.points[0]
-            #     end_point = segment.points[-1]
-
-            #     start_point = Point(
-            #         point_type=start_point_type,
-            #         track=new_track,
-            #         point=Point(
-            #             start_point.longitude,
-            #             start_point.latitude
-            #             ),
-            #         time=utc.localize(start_point.time),
-            #         elevation=start_point.elevation
-            #         )
-            #     start_point.save()
-
-            #     end_point = Point(
-            #         point_type=end_point_type,
-            #         track=new_track,
-            #         point=Point(
-            #             end_point.longitude,
-            #             end_point.latitude
-            #             ),
-            #         time=utc.localize(end_point.time),
-            #         elevation=end_point.elevation)
-            #     end_point.save()
 
 
 def GenerateFileHash(f, username):

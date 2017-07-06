@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User, Group
+from django.db import IntegrityError
 
-from rest_framework import viewsets, views
+from rest_framework import viewsets
 from rest_framework.response import Response
 
 from rest_framework.renderers import (
@@ -8,20 +9,19 @@ from rest_framework.renderers import (
     JSONRenderer
     )
 
-from rest_framework.parsers import FileUploadParser
+from rest_framework.parsers import MultiPartParser
 from rest_framework import mixins
-from rest_framework import generics
+from rest_framework.views import APIView
 
 from .serializers import (
-    DistanceUnitSerializer,
     GroupSerializer,
     TrackSerializer,
     UserSerializer,
-    FileUploadSerializer,
+    FileSerializer,
     )
 
 from .renderers import SVGRenderer
-from .models import Distance_Unit, Track
+from .models import Track
 from .utils import SaveGPXtoModel
 
 
@@ -41,18 +41,10 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
 
 
-class DistanceUnitViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-    queryset = Distance_Unit.objects.all()
-    serializer_class = DistanceUnitSerializer
-
-
-class TrackViewSet(mixins.ListModelMixin,
-                    mixins.RetrieveModelMixin,
-                    mixins.DestroyModelMixin,
-                    viewsets.GenericViewSet):
+class TrackViewSet(
+    mixins.ListModelMixin, mixins.RetrieveModelMixin,
+    mixins.DestroyModelMixin, viewsets.GenericViewSet
+    ):
     """
     API endpoint that allows tracks to be viewed or removed
     """
@@ -61,22 +53,32 @@ class TrackViewSet(mixins.ListModelMixin,
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer, SVGRenderer, )
 
 
-class FileUploadView(generics.CreateAPIView):
+class FileUploadView(APIView):
     """
     API endpoint to upload gpx files
     """
 
-    serializer_class = FileUploadSerializer
-    parser_classes = (FileUploadParser, )
+    serializer_class = FileSerializer
+    parser_classes = (MultiPartParser, )
 
-    def create(self, request, filename):
-
-        serializer = self.get_serializer(data=request.data)
+    def post(self, request):
+        serializer = FileSerializer(data=request.data)
         if serializer.is_valid():
-            SaveGPXtoModel(request.data['file'], request.user)
-            return Response(status=201)
+            try:
+                SaveGPXtoModel(request.data['file'], request.user)
+                return Response(status=201)
+            except IntegrityError:
+                return Response(
+                    data={
+                        'error': (
+                            'IntegrityError, '
+                            'This file is already in the database'
+                            )
+                        },
+                    status=400
+                )
         else:
-            return Response(status=400)
-
-
-
+            return Response(
+                data=serializer.errors,
+                status=400
+            )

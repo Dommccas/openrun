@@ -134,3 +134,7 @@ REST_FRAMEWORK = {
     ],
     'PAGE_SIZE': 10,
 }
+
+#Custom settings
+DASHBOARD_UPLOAD_FILE_TYPES = ['text/xml', 'application/xml']
+DASHBOARD_UPLOAD_FILE_MAX_SIZE = 2621440
