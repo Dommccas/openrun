@@ -111,7 +111,7 @@ class GPXFileValidator(FileValidator):
             parser.XMLParser(data.read().decode('ascii'))
             data.seek(0)
         except:
-            params = {'file_name': data.filename}
+            params = {'file_name': data.name}
             raise ValidationError(
                 self.error_messages['invalid_gpx'],
                 'invalid_gpx', params

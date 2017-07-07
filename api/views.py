@@ -4,14 +4,13 @@ from django.db import IntegrityError
 from rest_framework import viewsets
 from rest_framework.response import Response
 
+from rest_framework.generics import CreateAPIView
 from rest_framework.renderers import (
     BrowsableAPIRenderer,
     JSONRenderer
     )
-
-from rest_framework.parsers import MultiPartParser
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import mixins
-from rest_framework.views import APIView
 
 from .serializers import (
     GroupSerializer,
@@ -19,7 +18,6 @@ from .serializers import (
     UserSerializer,
     FileSerializer,
     )
-
 from .renderers import SVGRenderer
 from .models import Track
 from .utils import SaveGPXtoModel
@@ -53,13 +51,13 @@ class TrackViewSet(
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer, SVGRenderer, )
 
 
-class FileUploadView(APIView):
+class FileUploadView(CreateAPIView):
     """
     API endpoint to upload gpx files
     """
 
     serializer_class = FileSerializer
-    parser_classes = (MultiPartParser, )
+    parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request):
         serializer = FileSerializer(data=request.data)
@@ -82,3 +80,4 @@ class FileUploadView(APIView):
                 data=serializer.errors,
                 status=400
             )
+
