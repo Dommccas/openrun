@@ -19,8 +19,8 @@ class TemplateRenderer(BaseRenderer):
 
         for feature in features:
 
-            height = 250
-            width = 250
+            height = 1000
+            width = 1000
 
             Geometry = GEOSGeometry(str(feature['geometry']))
             extent = Geometry.extent
@@ -47,6 +47,8 @@ class TemplateRenderer(BaseRenderer):
             'paths': svgpaths,
             'translate': translate,
             'scale': scale,
+            'height': height,
+            'width': width,
             })
 
 
