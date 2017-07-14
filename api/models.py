@@ -35,20 +35,6 @@ class Track(models.Model):
     def __str__(self):
         return self.file_hash
 
-    def distance_user_units(self):
-        return round(
-            self.distance * self.owner.profile.distance_unit.conversion_factor,
-            2)
-
-    def speed_user_units(self):
-        pace_conversion_factor = 60 if self.owner.profile.pace else 1
-        return round(
-            pace_conversion_factor / (
-                self.average_speed
-                * self.owner.profile.distance_unit.conversion_factor
-                ),
-            2)
-
 
 @deconstructible
 class FileValidator(object):
