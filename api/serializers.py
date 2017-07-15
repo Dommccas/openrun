@@ -28,9 +28,8 @@ class TrackSerializer(GeoFeatureModelSerializer):
     class Meta:
         model = Track
         geo_field = 'track'
-        id_field = False
         fields = (
-            'id', 'owner', 'file_hash', 'start', 'finish',
+            'url', 'id', 'owner', 'file_hash', 'start', 'finish',
             'duration', 'distance', 'average_speed')
 
 

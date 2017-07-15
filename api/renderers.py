@@ -12,6 +12,7 @@ class SVGRenderer(BaseRenderer):
 
     def render(self, data, accepted_media_type=None, renderer_context=None):
 
+        total_extent = []
         svgpaths = []
 
         try:
@@ -28,25 +29,30 @@ class SVGRenderer(BaseRenderer):
                 height = 1000
                 width = 1000
 
-
             geometry = GEOSGeometry(str(feature['geometry']))
-            extent = geometry.extent
-            translate_x = extent[0] * -1
-            translate_y = extent[1] * -1
-
-            range_x = extent[2] - extent[0]
-            range_y = extent[3] - extent[1]
-
-            max_range = max(range_x, range_y)
-
-            translate = 'translate(%s %s)' % ( translate_x, translate_y )
-            scale = 'scale(%s)' % ( min(height, width) / max_range )
+            total_extent.append(geometry.extent)
 
             for line in geometry:
                 tmpPath = 'M ' + str(line[0][0]) + ' ' + str(line[0][1])
                 for point in line[1:]:
                     tmpPath += ' L ' + str(point[0]) + ' ' + str(point[1])
                 svgpaths.append(tmpPath)
+
+        unzipped = list(zip(*total_extent))
+
+        translate = 'translate(%s %s)' % (
+            -1 * min(unzipped[0]),
+            -1 * min(unzipped[1])
+            )
+
+        max_range_x = max(unzipped[2]) - min(unzipped[0])
+        max_range_y = max(unzipped[3]) - min(unzipped[1])
+
+        scale = 'scale(%s)' % (
+            min(height, width)
+            /
+            max(max_range_x, max_range_y)
+            )
 
         template = loader.get_template(self.template_name)
 
@@ -57,6 +63,3 @@ class SVGRenderer(BaseRenderer):
             'height': height,
             'width': width,
             })
-
-
-
