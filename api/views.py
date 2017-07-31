@@ -15,11 +15,12 @@ from rest_framework import mixins
 from .serializers import (
     GroupSerializer,
     TrackSerializer,
+    TrackPointSerializer,
     UserSerializer,
     FileSerializer,
     )
 from .renderers import SVGRenderer
-from .models import Track
+from .models import Track, TrackPoint
 from .utils import SaveGPXtoModel
 
 
@@ -48,6 +49,15 @@ class TrackViewSet(
     """
     queryset = Track.objects.all()
     serializer_class = TrackSerializer
+    renderer_classes = (JSONRenderer, BrowsableAPIRenderer, SVGRenderer, )
+
+
+class TrackPointViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    """
+    API endpoint that allows tracks to be viewed
+    """
+    queryset = TrackPoint.objects.all()
+    serializer_class = TrackPointSerializer
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer, SVGRenderer, )
 
 

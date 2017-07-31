@@ -35,6 +35,22 @@ class Track(models.Model):
     def __str__(self):
         return self.file_hash
 
+class TrackPoint(models.Model):
+
+    class Meta:
+        ordering = ['-time']
+
+    time = models.DateTimeField()
+    elevation = models.DecimalField(max_digits=7, decimal_places=2)
+    track = models.ForeignKey(Track)
+    point = models.PointField()
+    objects = models.GeoManager()
+
+    def __str__(self):
+        return self.gpx_track.start.strftime("%a %p %-d %B %Y") \
+         + ': ' \
+        + self.point_type
+
 
 @deconstructible
 class FileValidator(object):
@@ -105,3 +121,4 @@ class GPXFileValidator(FileValidator):
 
 
 geoadmin.site.register(Track, geoadmin.OSMGeoAdmin)
+geoadmin.site.register(TrackPoint, geoadmin.OSMGeoAdmin)

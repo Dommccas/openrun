@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 from django.conf import settings
 
-from .models import Track, GPXFileValidator
+from .models import Track, GPXFileValidator, TrackPoint
 
 from rest_framework.serializers import (
     HyperlinkedModelSerializer,
@@ -31,6 +31,14 @@ class TrackSerializer(GeoFeatureModelSerializer):
         fields = (
             'url', 'id', 'owner', 'file_hash', 'start', 'finish',
             'duration', 'distance', 'average_speed')
+
+
+class TrackPointSerializer(GeoFeatureModelSerializer):
+    class Meta:
+        model = TrackPoint
+        geo_field = 'point'
+        fields = (
+            'url', 'id', 'time', 'elevation', 'track', )
 
 
 class FileSerializer(Serializer):
