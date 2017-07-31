@@ -35,6 +35,7 @@ class Track(models.Model):
     def __str__(self):
         return self.file_hash
 
+
 class TrackPoint(models.Model):
 
     class Meta:
@@ -48,8 +49,7 @@ class TrackPoint(models.Model):
 
     def __str__(self):
         return self.gpx_track.start.strftime("%a %p %-d %B %Y") \
-         + ': ' \
-        + self.point_type
+            + ': ' + self.point_type
 
 
 @deconstructible

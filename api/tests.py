@@ -36,7 +36,6 @@ class viewTestCase(TestCase):
         self.client = APIClient()
 
 
-
 class uploadTestCase(TestCase):
     # Test suite for the file upload section.
 

@@ -23,8 +23,12 @@ class SVGRenderer(BaseRenderer):
         for feature in features:
 
             try:
-                height = int(renderer_context['request'].query_params['height'])
-                width = int(renderer_context['request'].query_params['width'])
+                height = int(
+                    renderer_context['request'].query_params['height']
+                    )
+                width = int(
+                    renderer_context['request'].query_params['width']
+                    )
             except:
                 height = 1000
                 width = 1000

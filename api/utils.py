@@ -35,15 +35,18 @@ def SaveGPXtoModel(f, owner):
 
             # create new track
             new_track = Track(
-                file_hash = file_hash,
-                owner = owner,
-                start = utc.localize(track.get_time_bounds().start_time),
-                finish = utc.localize(track.get_time_bounds().end_time),
-                average_speed = (moving_data[2] / 1000) \
-                / (moving_data[0] / 3600),
-                duration = moving_data[0] / 3600,
-                distance = moving_data[2] / 1000,
-                track = MultiLineString(multi_line_string)
+                file_hash=file_hash,
+                owner=owner,
+                start=utc.localize(track.get_time_bounds().start_time),
+                finish=utc.localize(track.get_time_bounds().end_time),
+                average_speed=(
+                    (moving_data[2] / 1000)
+                    /
+                    (moving_data[0] / 3600)
+                    ),
+                duration=moving_data[0] / 3600,
+                distance=moving_data[2] / 1000,
+                track=MultiLineString(multi_line_string)
                 )
             new_track.save()
 

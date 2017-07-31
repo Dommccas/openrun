@@ -41,9 +41,8 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 
 class TrackViewSet(
-    mixins.ListModelMixin, mixins.RetrieveModelMixin,
-    mixins.DestroyModelMixin, viewsets.GenericViewSet
-    ):
+        mixins.ListModelMixin, mixins.RetrieveModelMixin,
+        mixins.DestroyModelMixin, viewsets.GenericViewSet):
     """
     API endpoint that allows tracks to be viewed or removed
     """
@@ -52,7 +51,9 @@ class TrackViewSet(
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer, SVGRenderer, )
 
 
-class TrackPointViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class TrackPointViewSet(
+        mixins.ListModelMixin, mixins.RetrieveModelMixin,
+        viewsets.GenericViewSet):
     """
     API endpoint that allows tracks to be viewed
     """
@@ -90,4 +91,3 @@ class FileUploadView(CreateAPIView):
                 data=serializer.errors,
                 status=400
             )
-
