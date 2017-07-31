@@ -38,7 +38,7 @@ class TrackPointSerializer(GeoFeatureModelSerializer):
         model = TrackPoint
         geo_field = 'point'
         fields = (
-            'url', 'id', 'time', 'elevation', 'track', )
+             'id', 'time', 'elevation', 'track', )
 
 
 class FileSerializer(Serializer):

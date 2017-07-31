@@ -4,7 +4,7 @@ from django.db import IntegrityError
 from rest_framework import viewsets
 from rest_framework.response import Response
 
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.renderers import (
     BrowsableAPIRenderer,
     JSONRenderer
@@ -51,16 +51,27 @@ class TrackViewSet(
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer, SVGRenderer, )
 
 
-class TrackPointViewSet(
-        mixins.ListModelMixin, mixins.RetrieveModelMixin,
-        viewsets.GenericViewSet):
+class TrackPointList(ListAPIView):
     """
     API endpoint that allows tracks to be viewed
     """
-    queryset = TrackPoint.objects.all()
     serializer_class = TrackPointSerializer
     renderer_classes = (JSONRenderer, BrowsableAPIRenderer, SVGRenderer, )
 
+    #make sure all points are displayed
+    def paginate_queryset(self, queryset, view=None):
+        return None
+
+    def get_queryset(self):
+
+        track_id = self.kwargs.get('track_id', None)
+
+        if track_id is None:
+            points = TrackPoint.objects.all()
+        else:
+            points = TrackPoint.objects.filter(track=track_id)
+
+        return points
 
 class FileUploadView(CreateAPIView):
     """
