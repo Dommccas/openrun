@@ -15,9 +15,6 @@ def SaveGPXtoModel(f, owner):
     gpx = parse(f.read().decode('utf-8'))
     f.seek(0)
 
-    tracks = open(f.temporary_file_path(), layer='tracks')
-    points = open(f.temporary_file_path(), layer='track_points')
-
     # get moving data
     moving_data = gpx.get_moving_data()
 
@@ -27,6 +24,8 @@ def SaveGPXtoModel(f, owner):
     # import track data
     if gpx.tracks:
         for track in gpx.tracks:
+
+            tracks = open(f.temporary_file_path(), layer='tracks')
 
             # generate multi line string
             multi_line_string = []
@@ -50,18 +49,37 @@ def SaveGPXtoModel(f, owner):
                 )
             new_track.save()
 
-            for point in points:
+            for segment_id, segment in enumerate(track.segments):
+                for point_id, point in enumerate(segment.points):
 
-                new_point = TrackPoint(
-                    track=new_track,
-                    point=Point(
-                        point['geometry']['coordinates'][0],
-                        point['geometry']['coordinates'][1]
-                        ),
-                    time=point['properties']['time'],
-                    elevation=point['properties']['ele'],
-                    )
-                new_point.save()
+                    speed = segment.get_speed(point_id)
+                    if point_id == 0:
+                        speed = 0
+                        if segment_id == 0:
+                            point_type = 'S'
+                        else:
+                            point_type = 'R'
+                    elif point_id == len(segment.points)-1:
+                        if segment_id == len(track.segments)-1:
+                            point_type = 'F'
+                        else:
+                            point_type = 'P'
+                    else:
+                        point_type='A'
+
+                    new_point = TrackPoint(
+                        track=new_track,
+                        point_type=point_type,
+                        point=Point(
+                            point.longitude,
+                            point.latitude
+                            ),
+                        time=point.time,
+                        elevation=point.elevation,
+                        segment_id=segment_id,
+                        speed=speed,
+                        )
+                    new_point.save()
 
             return new_track
 
