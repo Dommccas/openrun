@@ -37,19 +37,29 @@ class Track(models.Model):
 
 
 class TrackPoint(models.Model):
+    POINT_TYPES = (
+        ('S', 'Start'),
+        ('F', 'Finish'),
+        ('P', 'Pause'),
+        ('R', 'Resume'),
+        ('A', 'Active'),
+        )
 
     class Meta:
         ordering = ['-time']
 
+    track = models.ForeignKey(Track)
+    point_type = models.CharField(max_length=1, choices=POINT_TYPES)
+    point = models.PointField()
     time = models.DateTimeField()
     elevation = models.DecimalField(max_digits=7, decimal_places=2)
-    track = models.ForeignKey(Track)
-    point = models.PointField()
+    segment_id = models.IntegerField()
+    speed = models.DecimalField(max_digits=7, decimal_places=2)
     objects = models.GeoManager()
 
+
     def __str__(self):
-        return self.gpx_track.start.strftime("%a %p %-d %B %Y") \
-            + ': ' + self.point_type
+        return self.gpx_track.start.strftime("%a %p %-d %B %Y")
 
 
 @deconstructible
