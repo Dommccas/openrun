@@ -58,6 +58,8 @@ class SVGRenderer(BaseRenderer):
             max(max_range_x, max_range_y)
             )
 
+        stroke_width =  max(max_range_x, max_range_y) / min(height, width)
+
         template = loader.get_template(self.template_name)
 
         return template.render({
@@ -66,4 +68,5 @@ class SVGRenderer(BaseRenderer):
             'scale': scale,
             'height': height,
             'width': width,
+            'stroke_width': stroke_width,
             })
